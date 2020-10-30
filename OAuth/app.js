@@ -11,7 +11,9 @@ const cors = require('cors');
 
 const db = require('./models');
 
-const indexRouter = require('./routes');
+const pageRouter = require('./routes/page');
+const authRouter = require('./routes/auth');
+const v1 = require('./routes/v1');
 
 dotenv.config();
 
@@ -46,7 +48,9 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use('/', indexRouter);
+app.use('/', pageRouter);
+app.use('/auth', authRouter);
+app.use('/v1', v1);
 
 const PORT = 3000;
 

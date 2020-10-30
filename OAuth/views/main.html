@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  {% if user and user.id %}
+    {{ user.nickname }}님 안녕하세요
+    <a href="/auth/logout">
+      <button>로그아웃</button>
+    </a>
+    <form action="/auth/domain" method="post">
+      <div>
+        <label for="type-free">무료</label>
+        <input type="radio" id="type-free" name="type" value="free">
+        <label for="type-premium">프리미엄</label>
+        <input type="radio" id="type-premium" name="type" value="premium">
+      </div>
+      <div>
+        <label for="host">도메인</label>
+        <input type="text" id="host" name="host" placeholder="ex) localhost:4000">
+      </div>
+      <button>저장</button>
+    </form>
+  {% for domain in domains %}
+  <div>
+    <span>호스트</span>
+    <span>{{ domain.host }}</span>
+  </div>
+  <div>
+    <span>타입</span>
+    <span>{{ domain.type }}</span>
+  </div>
+  <div>
+    <span>발급 키</span>
+    <span>{{ domain.clientSecret }}</span>
+  </div>
+  {% endfor %}
+  {% else %}
+  <form action="/auth/login" id="login-form" method="post">
+    <h2>로그인</h2>
+    <div class="input-group">
+      <label for="email">이메일</label>
+      <input id="email" type="email" name="email" required autofocus>
+    </div>
+    <div class="input-group">
+      <label for="password">비밀번호</label>
+      <input id="password" type="password" name="password" required>
+    </div>
+    <button id="login" type="submit">로그인</button>
+  </form>
+  <a href="/join">회원가입</a>
+  {% endif %}
+</body>
+</html>
