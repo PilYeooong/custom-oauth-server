@@ -11,7 +11,7 @@ module.exports = class Domain extends Sequelize.Model {
         type: Sequelize.ENUM('free', 'premium'),
         allowNull: false,
       },
-      clientSecret: {
+      clientId: {
         type: Sequelize.UUID,
         allowNull: false,
       },

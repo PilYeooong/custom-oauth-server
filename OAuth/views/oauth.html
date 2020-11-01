@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>oauth login</title>
+</head>
+<body>
+  <form action="/v1/oauth/login" id="login-form" method="post">
+    <h2>Oauth 로그인</h2>
+    <div class="input-group">
+      <label for="email">이메일</label>
+      <input id="email" type="email" name="email" required autofocus>
+    </div>
+    <div class="input-group">
+      <label for="password">비밀번호</label>
+      <input id="password" type="password" name="password" required>
+    </div>
+    <button id="login" type="submit">로그인</button>
+  </form>
+  <a href="/join">회원가입</a>
+</body>
+</html>
