@@ -5,12 +5,6 @@ const { token } = require('morgan');
 
 const router = express.Router();
 
-router.get('/login', (req, res, next) => {
-  res.redirect(
-    `http://localhost:3000/v1/oauth?client_id=${process.env.OAUTH_CLIENT_ID}`
-  );
-});
-
 const tokenRequest = async (req) => {
   try {
     if (!req.session.jwt) {
@@ -32,6 +26,23 @@ const tokenRequest = async (req) => {
   }
 };
 
+const requestLogin = async (req, res, user) => {
+  req.login(user, async (loginError) => {
+    if (loginError) {
+      console.error(loginError);
+      return next(loginError);
+    }
+    await tokenRequest(req);
+    return res.redirect('/');
+  });
+}
+
+router.get('/login', (req, res, next) => {
+  res.redirect(
+    `http://localhost:3000/v1/oauth?client_id=${process.env.OAUTH_CLIENT_ID}`
+  );
+});
+
 router.get('/callback', async (req, res, next) => {
   const email = decodeURIComponent(req.query.email);
   const nickname = decodeURIComponent(req.query.nickname);
@@ -44,24 +55,9 @@ router.get('/callback', async (req, res, next) => {
       password: 'randomString',
       provider: 'oauth',
     });
-    return req.login(newUser, async (loginError) => {
-      if (loginError) {
-        console.error(loginError);
-        return next(loginError);
-      }
-      await tokenRequest(req);
-      return res.redirect('/');
-    });
+    return requestLogin(req, res, newUser);
   }
-
-  return req.login(user, async (loginError) => {
-    if (loginError) {
-      console.error(loginError);
-      return next(loginError);
-    }
-    await tokenRequest(req);
-    return res.redirect('/');
-  });
+  return requestLogin(req, res, user);
 });
 
 module.exports = router;
