@@ -8,11 +8,11 @@ const oauthRouter = require('./oauth');
 const router = express.Router();
 
 router.post('/token', async (req, res, next) => {
-  const { clientId } = req.body;
+  const { client_id } = req.body;
 
   try {
     const domain = await Domain.findOne({
-      where: { clientId },
+      where: { clientId: client_id },
       include: [{ model: User, attributes: ['id', 'nickname', 'email'] }],
     });
     if(!domain) {
