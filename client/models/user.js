@@ -17,6 +17,11 @@ module.exports = class User extends Model {
         type: DataTypes.STRING(100),
         allowNull: false,
       },
+      provider: {
+        type: DataTypes.STRING(15),
+        allowNull: false,
+        defaultValue: 'local',
+      },
     }, {
       sequelize,
       modelName: 'User',

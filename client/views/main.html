@@ -6,6 +6,10 @@
   <title>Document</title>
 </head>
 <body>
+  {% if user and user.id %}
+    {{ user.email }}
+    {{ user.nickname }}
+  {% else %}
   <form action="/auth/login" id="login-form" method="post">
     <h2>로그인</h2>
     <div class="input-group">
@@ -20,5 +24,6 @@
   </form>
   <a href="/join">회원가입</a>
   <a href="/oauth/login">oauth 로그인</a>
+  {% endif %}
 </body>
 </html>
