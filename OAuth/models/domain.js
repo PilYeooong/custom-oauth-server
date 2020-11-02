@@ -15,6 +15,10 @@ module.exports = class Domain extends Sequelize.Model {
         type: Sequelize.UUID,
         allowNull: false,
       },
+      redirectURI: {
+        type: Sequelize.STRING(80),
+        allowNull: false,
+      }
     }, {
       sequelize,
       timestamps: true,

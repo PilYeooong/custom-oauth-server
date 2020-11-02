@@ -6,7 +6,7 @@
   <title>oauth login</title>
 </head>
 <body>
-  <form action="/v1/oauth/login" id="login-form" method="post">
+  <form action="/v1/oauth/login?client_id={{ client_id }}" id="login-form" method="post">
     <h2>Oauth 로그인</h2>
     <div class="input-group">
       <label for="email">이메일</label>

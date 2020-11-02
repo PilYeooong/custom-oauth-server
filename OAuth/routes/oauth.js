@@ -1,12 +1,21 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
-const { User } = require('../models');
+const { User, Domain } = require('../models');
 
 const router = express.Router();
 
-router.get('/', (req, res, next) => {
-  console.log(req.query.clientid);
-  return res.render('oauth');
+router.get('/', async (req, res, next) => {
+  try {
+    const client_id = req.query.client_id;
+    const exDomain = await Domain.findOne({ where: { clientId: client_id }});
+    if(!exDomain) {
+      return next('등록되지 않은 도메인 혹은 유효하지 않은 클라이언트 키 입니다.')
+    }
+    return res.render('oauth', { client_id });
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
 });
 
 router.post('/login', async (req, res, next) => {

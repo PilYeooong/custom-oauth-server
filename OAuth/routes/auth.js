@@ -16,7 +16,8 @@ router.post('/domain', async (req, res, next) => {
       UserId: req.user.id,
       host: req.body.host,
       type: req.body.type,
-      clientId: uuidV4()
+      clientId: uuidV4(),
+      redirectURI: req.body.redirectURI
     });
     return res.redirect('/');
   } catch (err) {

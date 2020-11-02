@@ -22,6 +22,10 @@
         <label for="host">도메인</label>
         <input type="text" id="host" name="host" placeholder="ex) localhost:4000">
       </div>
+      <div>
+        <label for="redirectURI">리다이렉트 URI</label>
+        <input type="text" id="redirectURI" name="redirectURI" placeholder="ex) localhost:4000/oauth/callback">
+      </div>
       <button>저장</button>
     </form>
   {% for domain in domains %}
