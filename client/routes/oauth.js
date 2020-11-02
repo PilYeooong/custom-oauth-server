@@ -34,7 +34,7 @@ const tokenRequest = async (req) => {
 
 router.get('/callback', async (req, res, next) => {
   const email = decodeURIComponent(req.query.email);
-  const nickname = decodeURIComponent(req.query.password);
+  const nickname = decodeURIComponent(req.query.nickname);
 
   const user = await User.findOne({ where: { email } });
   if (!user) {
