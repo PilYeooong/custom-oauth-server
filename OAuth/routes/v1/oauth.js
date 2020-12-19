@@ -1,6 +1,6 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
-const { User, Domain } = require('../models');
+const { User, Domain } = require('../../models');
 const jwt = require('jsonwebtoken');
 
 const router = express.Router();
@@ -38,16 +38,10 @@ router.post('/login', async (req, res, next) => {
       return next('비밀번호가 틀립니다.');
     };
 
-    const token = jwt.sign({
-      id: user.id,
-      email: user.email,
-      nickname: user.nickname
-    }, process.env.JWT_SECRET, {
-      expiresIn: '3m',
-      issuer: 'pilyeong'
-    });
+    const authCode = Math.random().toString(36).substring(2, 15);
+    await User.update({ authorizationCode: authCode }, { where: { id: user.id }});
 
-    return res.redirect(`http://${domain.redirectURI}?token=${token}`);
+    return res.redirect(`http://${domain.redirectURI}?code=${authCode}`);
   } catch (err) {
     console.error(err);
     next(err);

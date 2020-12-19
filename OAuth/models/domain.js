@@ -1,22 +1,27 @@
-const Sequelize = require('sequelize');
+const DataTypes = require('sequelize');
+const { Model } = DataTypes;
 
-module.exports = class Domain extends Sequelize.Model {
+module.exports = class Domain extends Model {
   static init(sequelize) {
     return super.init({
       host: {
-        type: Sequelize.STRING(80),
+        type: DataTypes.STRING(80),
         allowNull: false,
       },
       type: {
-        type: Sequelize.ENUM('free', 'premium'),
+        type: DataTypes.ENUM('free', 'premium'),
         allowNull: false,
       },
       clientId: {
-        type: Sequelize.UUID,
+        type: DataTypes.UUID,
+        allowNull: false,
+      },
+      clientSecret: {
+        type: DataTypes.UUID,
         allowNull: false,
       },
       redirectURI: {
-        type: Sequelize.STRING(80),
+        type: DataTypes.STRING(80),
         allowNull: false,
       }
     }, {

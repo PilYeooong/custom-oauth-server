@@ -41,6 +41,10 @@
     <span>발급 키</span>
     <span>{{ domain.clientId }}</span>
   </div>
+  <div>
+    <span>비밀 키</span>
+    <span>{{ domain.clientSecret }}</span>
+  </div>
   {% endfor %}
   {% else %}
   <form action="/auth/login" id="login-form" method="post">

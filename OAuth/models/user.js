@@ -17,6 +17,10 @@ module.exports = class User extends Model {
         type: DataTypes.STRING(100),
         allowNull: false,
       },
+      authorizationCode: {
+        type: DataTypes.STRING(20),
+        allowNull: true
+      },
     }, {
       sequelize,
       modelName: 'User',
