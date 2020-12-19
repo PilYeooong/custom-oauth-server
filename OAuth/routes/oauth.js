@@ -1,7 +1,7 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const { User, Domain } = require('../models');
-const axios = require('axios');
+const jwt = require('jsonwebtoken');
 
 const router = express.Router();
 
@@ -38,9 +38,16 @@ router.post('/login', async (req, res, next) => {
       return next('비밀번호가 틀립니다.');
     };
 
-    const emailToPass = encodeURIComponent(user.email);
-    const nicknameToPass = encodeURIComponent(user.nickname);
-    return res.redirect(`http://${domain.redirectURI}?email=${emailToPass}&nickname=${nicknameToPass}`);
+    const token = jwt.sign({
+      id: user.id,
+      email: user.email,
+      nickname: user.nickname
+    }, process.env.JWT_SECRET, {
+      expiresIn: '3m',
+      issuer: 'pilyeong'
+    });
+
+    return res.redirect(`http://${domain.redirectURI}?token=${token}`);
   } catch (err) {
     console.error(err);
     next(err);
