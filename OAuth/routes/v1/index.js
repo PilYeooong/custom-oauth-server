@@ -23,6 +23,9 @@ router.post('/token', async (req, res, next) => {
       });
     };
     const user = await User.findOne({ where: { authorizationCode: code }});
+    if (!user) {
+      return res.status(400).send('잘못 된 접근입니다.');
+    }
     await User.update({ authorizationCode: null }, { where: { id: user.id }});
     const token = jwt.sign(
       {
