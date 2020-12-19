@@ -1,10 +1,10 @@
 const express = require('express');
 const { User } = require('../models');
 const axios = require('axios');
-const { token } = require('morgan');
 
 const router = express.Router();
 
+// 이후에도 oauth 서버 자원 접근시, 토큰을 검증 혹은 재발급이 필요할 경우 재발급 받아 세션에 저장한다.
 const tokenRequest = async (req) => {
   try {
     if (!req.session.jwt) {
@@ -12,9 +12,11 @@ const tokenRequest = async (req) => {
         client_id: process.env.OAUTH_CLIENT_ID,
       });
       req.session.jwt = tokenRequest.data.token;
-
       return tokenRequest.data.token;
     }
+    return await axios.get('http://localhost:3000/v1/user', {
+      headers: { Authorization: `${req.session.jwt}` },
+    });
   } catch (error) {
     console.error(error);
     if (error.response.status === 419) {
@@ -32,10 +34,9 @@ const requestLogin = async (req, res, user) => {
       console.error(loginError);
       return next(loginError);
     }
-    await tokenRequest(req);
     return res.redirect('/');
   });
-}
+};
 
 router.get('/login', (req, res, next) => {
   res.redirect(
@@ -44,20 +45,33 @@ router.get('/login', (req, res, next) => {
 });
 
 router.get('/callback', async (req, res, next) => {
-  const email = decodeURIComponent(req.query.email);
-  const nickname = decodeURIComponent(req.query.nickname);
+  try {
+    const { token } = req.query;
 
-  const user = await User.findOne({ where: { email } });
-  if (!user) {
-    const newUser = await User.create({
-      email,
-      nickname,
-      password: 'randomString',
-      provider: 'oauth',
+    // 토큰을 받아 다시 oauth 서버로 토큰 검증 및 유저 정보를 요청한다.
+    const result = await axios.get('http://localhost:3000/v1/user', {
+      headers: { Authorization: `${token}` },
     });
-    return requestLogin(req, res, newUser);
+    const email = decodeURIComponent(result.data.email);
+    const nickname = decodeURIComponent(result.data.nickname);
+
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      const newUser = await User.create({
+        email,
+        nickname,
+        password: 'randomString',
+        provider: 'oauth',
+      });
+      req.session.jwt = token;
+      return requestLogin(req, res, newUser);
+    }
+    req.session.jwt = token;
+    return requestLogin(req, res, user);
+  } catch (error) {
+    console.error(error);
+    return next(error);
   }
-  return requestLogin(req, res, user);
 });
 
 module.exports = router;
