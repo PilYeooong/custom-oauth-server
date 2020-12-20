@@ -23,8 +23,8 @@ OAuth 인증의 과정 및 로직을 직접 구현해보고 이해하는데 목�
 
  1. Client에서 OAuth 로그인 실행시 OAuth 서버의 로그인 페이지로 리다이렉션 및 이동
  2. 기존 OAuth 계정으로 로그인
- 3. OAuth 서버로부터 토큰을 발급 받고, Client 페이지로 리다이렉션
- 4. Client 페이지에서는 토큰을 받아 저장
+ 3. OAuth 서버로부터 authorization_code를 받고, Client 페이지로 리다이렉션
+ 4. Client 페이지에서는 받아온 authorization_code, client_id, client_secret와 함께 토큰 요청 및 토큰을 받아 저장
  5. Client는 받아온 토큰을 기반으로, OAuth 서버로 유저 정보를 요청
  6. OAuth 서버는 토큰을 검증하고, 요청한 정보를 응답
  7. Client는 받아온 OAuth 서버로부터 받아 온 유저 정보로 로그인 실행 및 완료
